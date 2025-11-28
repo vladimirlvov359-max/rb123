@@ -1,7 +1,24 @@
 .burger_constructor {
   display: flex;
   flex-direction: column;
+  gap: 5%;
   width: 600px;
-  padding-bottom: 20px;
-  color: var(--text-primary-color);
+}
+
+.price_button {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 5%;
+}
+
+.largeIcon {
+  width: 30px;
+  height: 30px;
+}
+
+.slice {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
