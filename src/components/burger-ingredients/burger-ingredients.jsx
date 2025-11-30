@@ -1,4 +1,5 @@
-import { Tab } from '@krgaa/react-developer-burger-ui-components';
+import { Preloader, Tab } from '@krgaa/react-developer-burger-ui-components';
+import { useRef, useState } from 'react';
 
 import { BurgerCard } from '@components/burger-ingredients/burger-card/burger-card.jsx';
 
@@ -7,8 +8,28 @@ import styles from './burger-ingredients.module.css';
 export const BurgerIngredients = ({ ingredients }) => {
   console.log(ingredients);
 
+  const bunRef = useRef(null);
+  const sauceRef = useRef(null);
+  const mainRef = useRef(null);
+  const scrollContainerRef = useRef(null);
+
+  const [activeTab, setActiveTab] = useState('bun');
+
+  const scrollToSection = (sectionRef, tabValue) => {
+    setActiveTab(tabValue);
+    if (sectionRef.current && scrollContainerRef.current) {
+      const sectionTop = sectionRef.current.offsetTop;
+      const containerTop = scrollContainerRef.current.offsetTop;
+
+      scrollContainerRef.current.scrollTo({
+        top: sectionTop - containerTop,
+        behavior: 'smooth',
+      });
+    }
+  };
+
   if (ingredients.length === 0) {
-    return <div>загрузка</div>;
+    return <Preloader />;
   }
 
   return (
@@ -18,35 +39,36 @@ export const BurgerIngredients = ({ ingredients }) => {
           <ul className={styles.menu}>
             <Tab
               value="bun"
-              active={true}
-              onClick={() => {
-                console.log('bun click');
-              }}
+              active={activeTab === 'bun'}
+              onClick={() => scrollToSection(bunRef, 'bun')}
             >
               Булки
             </Tab>
+
             <Tab
-              value="main"
-              active={false}
-              onClick={() => {
-                console.log('bun click');
-              }}
-            >
-              Начинки
-            </Tab>
-            <Tab
+              active={activeTab === 'sauce'}
               value="sauce"
-              active={false}
-              onClick={() => {
-                console.log('bun click');
-              }}
+              onClick={() => scrollToSection(sauceRef, 'sauce')}
             >
               Соусы
+            </Tab>
+            <Tab
+              active={activeTab === 'main'}
+              value="main"
+              onClick={() => scrollToSection(mainRef, 'main')}
+            >
+              Начинки
             </Tab>
           </ul>
         </nav>
       </section>
-      <BurgerCard ingredients={ingredients} />
+      <BurgerCard
+        ingredients={ingredients}
+        bunRef={bunRef}
+        sauceRef={sauceRef}
+        mainRef={mainRef}
+        scrollContainerRef={scrollContainerRef}
+      />
     </div>
   );
 };
