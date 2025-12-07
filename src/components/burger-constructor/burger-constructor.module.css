@@ -22,3 +22,23 @@
   flex-direction: column;
   gap: 15px;
 }
+
+.bunRow {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  cursor: auto;
+}
+
+.placeholder {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+}
+
+.scrollableArea {
+  max-height: 27rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #8585ad #2f2f37;
+}

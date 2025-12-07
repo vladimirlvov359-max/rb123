@@ -22,36 +22,46 @@ export const BurgerConstructor = ({ ingredients }) => {
   return (
     <section className={styles.burger_constructor}>
       <div className={styles.slice}>
-        <ConstructorElement
-          type="top"
-          isLocked={true}
-          text="Краторная булка N-200i (верх)"
-          price={200}
-          thumbnail={image}
-        />
-        <BurgerSlice ingredients={ingredients} />
+        {/* Верхняя булка */}
+        <div className={styles.bunRow}>
+          <div className={styles.placeholder}></div>
+          <ConstructorElement
+            type="top"
+            isLocked={true}
+            text="Краторная булка N-200i (верх)"
+            price={200}
+            thumbnail={image}
+          />
+        </div>
 
-        <ConstructorElement
-          type="bottom"
-          isLocked={true}
-          text="Краторная булка N-200i (низ)"
-          price={200}
-          thumbnail={image}
-        />
+        {/* Начинка — в прокручиваемом контейнере */}
+        <div className={styles.scrollableArea}>
+          <BurgerSlice ingredients={ingredients} />
+        </div>
+
+        {/* Нижняя булка */}
+        <div className={styles.bunRow}>
+          <div className={styles.placeholder}></div>
+          <ConstructorElement
+            type="bottom"
+            isLocked={true}
+            text="Краторная булка N-200i (низ)"
+            price={200}
+            thumbnail={image}
+          />
+        </div>
       </div>
+
+      {/* Кнопка оформления */}
       <div className={styles.price_button}>
         <div className="text text_type_digits-medium">
           610 <CurrencyIcon type="primary" className={styles.largeIcon} />
         </div>
-        <Button
-          htmlType="button"
-          type="primary"
-          size="large"
-          onClick={() => getModalOverlay()}
-        >
+        <Button htmlType="button" type="primary" size="large" onClick={getModalOverlay}>
           оформить заказ
         </Button>
       </div>
+
       {isModalOpen && <ModalOverlay setIsModalOpen={setIsModalOpen} />}
     </section>
   );
