@@ -1,0 +1,27 @@
+import {
+  ConstructorElement,
+  DragIcon,
+} from '@krgaa/react-developer-burger-ui-components';
+
+import styles from './burger-filling.module.css';
+
+export function BurgerFilling({ ingredients }) {
+  return (
+    <ul className={styles.main}>
+      {ingredients
+        .filter((ing) => ing.type !== 'bun')
+        .map((ingredient) => (
+          <li key={ingredient._id} className={styles.ingredientItem}>
+            <div className={styles.dragWrapper}>
+              <DragIcon type="primary" />
+            </div>
+            <ConstructorElement
+              text={ingredient.name}
+              price={ingredient.price}
+              thumbnail={ingredient.image}
+            />
+          </li>
+        ))}
+    </ul>
+  );
+}
