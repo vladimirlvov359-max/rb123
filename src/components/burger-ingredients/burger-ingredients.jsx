@@ -1,7 +1,7 @@
 import { Preloader, Tab } from '@krgaa/react-developer-burger-ui-components';
 import { useRef, useState } from 'react';
 
-import { BurgerCard } from '@components/burger-ingredients/burger-card/burger-card.jsx';
+import { IngredientCards } from '@components/burger-ingredients/burger-card/ingredient-cards.jsx';
 
 import styles from './burger-ingredients.module.css';
 
@@ -62,7 +62,7 @@ export const BurgerIngredients = ({ ingredients }) => {
           </ul>
         </nav>
       </section>
-      <BurgerCard
+      <IngredientCards
         ingredients={ingredients}
         bunRef={bunRef}
         sauceRef={sauceRef}

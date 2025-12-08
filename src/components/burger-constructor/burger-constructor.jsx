@@ -5,8 +5,9 @@ import {
 } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
 
-import { BurgerSlice } from '@components/burger-constructor/burger-slice/burger-slice.jsx';
-import ModalOverlay from '@components/Modal/modal-overlay.jsx';
+import { BurgerFilling } from '@components/burger-constructor/burger-filling/burger-filling.jsx';
+import Modal from '@components/Modal/Modal.jsx';
+import OrderDetails from '@components/Modal/order-details.jsx';
 
 import styles from './burger-constructor.module.css';
 
@@ -22,7 +23,6 @@ export const BurgerConstructor = ({ ingredients }) => {
   return (
     <section className={styles.burger_constructor}>
       <div className={styles.slice}>
-        {/* Верхняя булка */}
         <div className={styles.bunRow}>
           <div className={styles.placeholder}></div>
           <ConstructorElement
@@ -34,9 +34,8 @@ export const BurgerConstructor = ({ ingredients }) => {
           />
         </div>
 
-        {/* Начинка — в прокручиваемом контейнере */}
         <div className={styles.scrollableArea}>
-          <BurgerSlice ingredients={ingredients} />
+          <BurgerFilling ingredients={ingredients} />
         </div>
 
         {/* Нижняя булка */}
@@ -52,7 +51,6 @@ export const BurgerConstructor = ({ ingredients }) => {
         </div>
       </div>
 
-      {/* Кнопка оформления */}
       <div className={styles.price_button}>
         <div className="text text_type_digits-medium">
           610 <CurrencyIcon type="primary" className={styles.largeIcon} />
@@ -61,8 +59,11 @@ export const BurgerConstructor = ({ ingredients }) => {
           оформить заказ
         </Button>
       </div>
-
-      {isModalOpen && <ModalOverlay setIsModalOpen={setIsModalOpen} />}
+      {isModalOpen && (
+        <Modal onClose={() => setIsModalOpen(false)}>
+          <OrderDetails />
+        </Modal>
+      )}
     </section>
   );
 };

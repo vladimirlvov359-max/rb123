@@ -3,9 +3,9 @@ import {
   DragIcon,
 } from '@krgaa/react-developer-burger-ui-components';
 
-import styles from './burger-slice.module.css';
+import styles from './burger-filling.module.css';
 
-export function BurgerSlice({ ingredients }) {
+export function BurgerFilling({ ingredients }) {
   return (
     <ul className={styles.main}>
       {ingredients
