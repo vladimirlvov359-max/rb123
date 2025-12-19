@@ -1,79 +1,101 @@
 import { CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
-import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import IngredientDetails from '@components/Modal/ingredient-details.jsx';
-import Modal from '@components/Modal/Modal.jsx';
+import { openIngredientModal } from '../../../services/ingredientDetailsSlice';
+import DraggableIngredient from '../DraggableIngredient';
 
 import style from './ingredient-cards.module.css';
 
 export function IngredientCards(props) {
-  const { ingredients, bunRef, sauceRef, mainRef, scrollContainerRef } = props;
+  const {
+    bunItems,
+    sauceItems,
+    mainItems,
+    bunRef,
+    sauceRef,
+    mainRef,
+    scrollContainerRef,
+  } = props;
 
-  const buns = ingredients.filter((ingredient) => ingredient.type === 'bun');
-  const sauces = ingredients.filter((ingredient) => ingredient.type === 'sauce');
-  const mains = ingredients.filter((ingredient) => ingredient.type === 'main');
+  const dispatch = useDispatch();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [ingredient, setIngredient] = useState(null);
+  const constructorState = useSelector((state) => state.constructor);
 
-  const getModalOverlay = (ingredient) => {
-    setIsModalOpen(true);
-    setIngredient(ingredient);
+  const bun = constructorState?.bun || null;
+  const ingredients = constructorState?.ingredients || [];
+
+  const getIngredientCount = (ingredient) => {
+    if (!ingredient) return 0;
+
+    if (ingredient.type === 'bun') {
+      return bun && bun._id === ingredient._id ? 2 : 0;
+    }
+
+    if (!Array.isArray(ingredients)) return 0;
+
+    return ingredients.filter((item) => item?._id === ingredient._id).length;
   };
+
+  const handleIngredientClick = (ingredient) => {
+    dispatch(openIngredientModal(ingredient));
+  };
+
+  const safeBunItems = Array.isArray(bunItems) ? bunItems : [];
+  const safeSauceItems = Array.isArray(sauceItems) ? sauceItems : [];
+  const safeMainItems = Array.isArray(mainItems) ? mainItems : [];
 
   return (
     <div>
-      <ul ref={scrollContainerRef} className={`${style.main} custom-scroll `}>
+      <ul ref={scrollContainerRef} className={`${style.main} custom-scroll`}>
         <div ref={bunRef}>
           <div className="text text_type_main-large">Булки</div>
           <div className={style.verticalBlock}>
-            {buns.map((bun) => (
-              <li
-                key={bun._id}
-                className={style.column}
-                onClick={() => {
-                  setIngredient(bun);
-                  getModalOverlay(bun);
-                }}
-              >
-                {<img src={bun.image} alt="bun" />}
-                <div className={style.price_cristal}>
-                  <div className="text text_type_digits-default">{bun.price}</div>
-                  <div>
-                    <CurrencyIcon type="primary" />
+            {safeBunItems.map((bun) => (
+              <DraggableIngredient key={bun._id} ingredient={bun}>
+                <li className={style.column} onClick={() => handleIngredientClick(bun)}>
+                  {getIngredientCount(bun) > 0 && (
+                    <div className={style.counter}>{getIngredientCount(bun)}</div>
+                  )}
+                  <img src={bun.image} alt={bun.name} />
+                  <div className={style.price_cristal}>
+                    <div className="text text_type_digits-default">{bun.price}</div>
+                    <div>
+                      <CurrencyIcon type="primary" />
+                    </div>
                   </div>
-                </div>
-                <div className={`text text_type_main-default ${style.name}`}>
-                  {bun.name}
-                </div>
-              </li>
+                  <div className={`text text_type_main-default ${style.name}`}>
+                    {bun.name}
+                  </div>
+                </li>
+              </DraggableIngredient>
             ))}
           </div>
         </div>
 
         <div ref={sauceRef}>
-          <div className={`text text_type_main-large`}>Соусы</div>
+          <div className="text text_type_main-large">Соусы</div>
           <div className={style.verticalBlock}>
-            {sauces.map((sauce) => (
-              <li
-                key={sauce._id}
-                className={`pl-1 pr-1 pb-1 pt-1 ${style.column}`}
-                onClick={() => {
-                  setIngredient(sauce);
-                  getModalOverlay(sauce);
-                }}
-              >
-                {<img src={sauce.image} alt="sauce" />}
-                <div className={style.price_cristal}>
-                  <div className="text text_type_digits-default">{sauce.price}</div>
-                  <div>
-                    <CurrencyIcon type="primary" />
+            {safeSauceItems.map((sauce) => (
+              <DraggableIngredient key={sauce._id} ingredient={sauce}>
+                <li
+                  className={style.column}
+                  onClick={() => handleIngredientClick(sauce)}
+                >
+                  {getIngredientCount(sauce) > 0 && (
+                    <div className={style.counter}>{getIngredientCount(sauce)}</div>
+                  )}
+                  <img src={sauce.image} alt={sauce.name} />
+                  <div className={style.price_cristal}>
+                    <div className="text text_type_digits-default">{sauce.price}</div>
+                    <div>
+                      <CurrencyIcon type="primary" />
+                    </div>
                   </div>
-                </div>
-                <div className={`text text_type_main-default ${style.name}`}>
-                  {sauce.name}
-                </div>
-              </li>
+                  <div className={`text text_type_main-default ${style.name}`}>
+                    {sauce.name}
+                  </div>
+                </li>
+              </DraggableIngredient>
             ))}
           </div>
         </div>
@@ -81,35 +103,28 @@ export function IngredientCards(props) {
         <div ref={mainRef}>
           <div className="text text_type_main-large">Начинки</div>
           <div className={style.verticalBlock}>
-            {mains.map((main) => (
-              <li
-                key={main._id}
-                className={`pl-1 pr-1 pb-1 pt-1 ${style.column}`}
-                onClick={() => {
-                  setIngredient(main);
-                  getModalOverlay(main);
-                }}
-              >
-                {<img src={main.image} alt="main" />}
-                <div className={style.price_cristal}>
-                  <div className="text text_type_digits-default">{main.price}</div>
-                  <div>
-                    <CurrencyIcon type="primary" />
+            {safeMainItems.map((main) => (
+              <DraggableIngredient key={main._id} ingredient={main}>
+                <li className={style.column} onClick={() => handleIngredientClick(main)}>
+                  {getIngredientCount(main) > 0 && (
+                    <div className={style.counter}>{getIngredientCount(main)}</div>
+                  )}
+                  <img src={main.image} alt={main.name} />
+                  <div className={style.price_cristal}>
+                    <div className="text text_type_digits-default">{main.price}</div>
+                    <div>
+                      <CurrencyIcon type="primary" />
+                    </div>
                   </div>
-                </div>
-                <div className={`text text_type_main-default ${style.name}`}>
-                  {main.name}
-                </div>
-              </li>
+                  <div className={`text text_type_main-default ${style.name}`}>
+                    {main.name}
+                  </div>
+                </li>
+              </DraggableIngredient>
             ))}
           </div>
         </div>
       </ul>
-      {isModalOpen && (
-        <Modal onClose={() => setIsModalOpen(false)}>
-          <IngredientDetails ingredient={ingredient} />
-        </Modal>
-      )}
     </div>
   );
 }
