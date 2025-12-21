@@ -19,7 +19,7 @@ const calculateTotal = (state) => {
   return total;
 };
 
-const constructorSlice = createSlice({
+const constructor_slice = createSlice({
   name: 'constructor',
   initialState,
   reducers: {
@@ -91,8 +91,6 @@ const constructorSlice = createSlice({
 
       newState.total = calculateTotal(newState);
 
-      console.log('New total after removeIngredient:', newState.total);
-
       return newState;
     },
 
@@ -135,6 +133,6 @@ export const {
   removeIngredient,
   moveIngredient,
   clearConstructor,
-} = constructorSlice.actions;
+} = constructor_slice.actions;
 
-export default constructorSlice.reducer;
+export default constructor_slice.reducer;

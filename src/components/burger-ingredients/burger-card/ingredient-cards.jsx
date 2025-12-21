@@ -1,7 +1,8 @@
 import { CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { openIngredientModal } from '../../../services/ingredientDetailsSlice';
+import { openIngredientModal } from '@services/ingredient_detailsSlice.js';
+
 import DraggableIngredient from '../DraggableIngredient';
 
 import style from './ingredient-cards.module.css';

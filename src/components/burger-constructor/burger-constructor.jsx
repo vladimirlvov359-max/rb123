@@ -4,9 +4,9 @@ import {
   CurrencyIcon,
 } from '@krgaa/react-developer-burger-ui-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { createOrder } from 'src/services/orderSlice.js';
 
 import { BurgerFilling } from '@components/burger-constructor/burger-filling/burger-filling.jsx';
+import { createOrder } from '@services/order_slice.js';
 
 import DropTargetConstructor from './DropTargetConstructor';
 

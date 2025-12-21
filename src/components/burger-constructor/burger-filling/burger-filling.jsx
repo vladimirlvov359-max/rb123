@@ -5,7 +5,8 @@ import {
 import { useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
-import { moveIngredient, removeIngredient } from 'src/services/constructorSlice.js';
+
+import { moveIngredient, removeIngredient } from '@services/constructor_slice.js';
 
 import styles from './burger-filling.module.css';
 
@@ -17,7 +18,6 @@ const DraggableConstructorElement = ({ ingredient, index }) => {
   const [{ isDragging }, drag] = useDrag({
     type: 'constructor-ingredient',
     item: () => {
-      console.log('Start dragging:', ingredient.name, 'from index:', index);
       return { index, id: ingredient.uniqueId };
     },
     collect: (monitor) => ({
@@ -26,7 +26,7 @@ const DraggableConstructorElement = ({ ingredient, index }) => {
     end: (item, monitor) => {
       const didDrop = monitor.didDrop();
       if (!didDrop) {
-        console.log('Drag cancelled - item returned');
+        console.log('---');
       }
     },
   });
@@ -66,7 +66,6 @@ const DraggableConstructorElement = ({ ingredient, index }) => {
         return;
       }
 
-      console.log(`Moving item from ${dragIndex} to ${hoverIndex}`);
       dispatch(
         moveIngredient({
           fromIndex: dragIndex,

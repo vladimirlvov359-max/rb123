@@ -7,8 +7,7 @@ import { AppHeader } from '@components/app-header/app-header';
 import { BurgerConstructor } from '@components/burger-constructor/burger-constructor';
 import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredients';
 import ModalRoot from '@components/Modal/modal_root';
-
-import { fetchIngredients } from '../../services/ingredientsSlice';
+import { fetchIngredients } from '@services/ingredients_slice.js';
 
 import styles from './app.module.css';
 

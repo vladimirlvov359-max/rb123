@@ -5,8 +5,6 @@ import styles from './order-details.module.css';
 export default function OrderDetails() {
   const { orderNumber, loading, error } = useSelector((state) => state.order);
 
-  console.log('OrderDetails - номер заказа:', orderNumber);
-
   if (loading) {
     return (
       <div className={styles.container}>

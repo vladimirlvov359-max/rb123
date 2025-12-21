@@ -2,8 +2,8 @@ import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useDispatch } from 'react-redux';
 
-import { closeIngredientModal } from '../../services/ingredientDetailsSlice';
-import { closeOrderModal } from '../../services/orderSlice';
+import { closeIngredientModal } from '@services/ingredient_detailsSlice.js';
+import { closeOrderModal } from '@services/order_slice.js';
 
 import styles from './modal-overlay.module.css';
 
@@ -41,7 +41,6 @@ export default function ModalOverlay({ children, type = 'ingredient' }) {
   const modalsContainer = document.getElementById('modals');
 
   if (!modalsContainer) {
-    console.error('Контейнер #modals не найден в index.html');
     return null;
   }
 
