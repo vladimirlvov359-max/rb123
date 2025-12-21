@@ -1,7 +1,6 @@
 .burger_constructor {
   display: flex;
   flex-direction: column;
-  gap: 5%;
   width: 600px;
 }
 
@@ -37,8 +36,34 @@
 }
 
 .scrollableArea {
-  max-height: 27rem;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: #8585ad #2f2f37;
+  overflow-y: visible;
+}
+
+.bunSection {
+  margin-bottom: 16px;
+}
+
+.emptyBunPlaceholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 488px;
+  height: 90px;
+  padding: 16px 24px;
+  color: #8585ad;
+  font-size: 16px;
+  font-family: 'Jet Brains Mono', sans-serif;
+  line-height: 24px;
+  text-align: center;
+  background-color: #1c1c21;
+  border: 2px dashed #8585ad;
+  border-radius: 40px;
+  transition: all 0.3s ease;
+}
+
+.emptyBunPlaceholder:hover {
+  color: #f2f2f3;
+  border-color: #4c4cff;
 }

@@ -1,49 +1,17 @@
-import { useEffect, useRef } from 'react';
+// src/components/Modal/modal-overlay.jsx
 import { createPortal } from 'react-dom';
 
 import styles from './modal-overlay.module.css';
 
 export default function ModalOverlay({ children, onClose }) {
-  const modalRef = useRef(null);
-
-  const closeModal = () => {
-    onClose();
-  };
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        closeModal();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [onClose]);
-
-  const handleOverlayClick = (e) => {
-    if (modalRef.current && !modalRef.current.contains(e.target)) {
-      closeModal();
-    }
-  };
-
   const modalsContainer = document.getElementById('modals');
-
-  if (!modalsContainer) {
-    console.error('Контейнер #modals не найден в index.html');
-    return null;
-  }
+  if (!modalsContainer) return null;
 
   return createPortal(
-    <div className={styles.main} onClick={handleOverlayClick}>
-      <div className={styles.modalContent} ref={modalRef}>
-        {children}
-        <button className={styles.closeButton} onClick={closeModal}>
-          ×
-        </button>
-      </div>
+    <div className={styles.main} onClick={onClose}>
+      {' '}
+      {/* клик по фону → закрыть */}
+      {children}
     </div>,
     modalsContainer
   );
