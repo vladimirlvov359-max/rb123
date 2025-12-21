@@ -14,29 +14,20 @@ const calculateTotal = (state) => {
     (sum, item) => sum + (item.price || 0),
     0
   );
-  const total = bunPrice + ingredientsPrice;
-
-  return total;
+  return bunPrice + ingredientsPrice;
 };
 
 const constructor_slice = createSlice({
   name: 'constructor',
   initialState,
   reducers: {
-    setBun: {
-      reducer: (state, action) => {
-        const newState = {
-          ...state,
-          bun: action.payload,
-        };
-
-        newState.total = calculateTotal(newState);
-
-        return newState;
-      },
-      prepare: (bun) => {
-        return { payload: bun };
-      },
+    setBun: (state, action) => {
+      const newState = {
+        ...state,
+        bun: action.payload,
+      };
+      newState.total = calculateTotal(newState);
+      return newState;
     },
 
     addIngredient: {
@@ -49,10 +40,13 @@ const constructor_slice = createSlice({
         const currentIngredients = Array.isArray(state.ingredients)
           ? state.ingredients
           : [];
-        const newIngredient = {
-          ...action.payload,
-          uniqueId: `${action.payload._id}-${Date.now()}-${Math.random()}`,
-        };
+
+        const newIngredient = action.payload;
+
+        if (!newIngredient.uniqueId) {
+          console.error('Ingredient must have uniqueId');
+          return state;
+        }
 
         const newState = {
           ...state,
@@ -62,11 +56,19 @@ const constructor_slice = createSlice({
         };
 
         newState.total = calculateTotal(newState);
-
         return newState;
       },
       prepare: (ingredient) => {
-        return { payload: ingredient };
+        const timestamp = Date.now();
+        const random = Math.random().toString(36).substring(2, 9);
+        const uniqueId = `${ingredient._id}-${timestamp}-${random}`;
+
+        return {
+          payload: {
+            ...ingredient,
+            uniqueId,
+          },
+        };
       },
     },
 
@@ -90,7 +92,6 @@ const constructor_slice = createSlice({
       };
 
       newState.total = calculateTotal(newState);
-
       return newState;
     },
 
@@ -121,9 +122,7 @@ const constructor_slice = createSlice({
       };
     },
 
-    clearConstructor: () => {
-      return initialState;
-    },
+    clearConstructor: () => initialState,
   },
 });
 

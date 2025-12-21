@@ -1,23 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { BASE_URL } from '../utils/api';
+import { request } from '../utils/api';
 
 export const fetchIngredients = createAsyncThunk(
   'ingredients/fetchAll',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${BASE_URL}/ingredients`);
-
-      if (!response.ok) {
-        throw new Error(`Ошибка: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      if (!data.success) {
-        throw new Error('Ошибка API');
-      }
-
+      const data = await request('/ingredients');
       return data.data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -35,80 +24,46 @@ const initialState = {
   success: false,
 };
 
-const privateReducers = {
-  setItems: (state, action) => {
-    state.items = action.payload;
-  },
-  setBun: (state, action) => {
-    state.bun = action.payload;
-  },
-  setSauce: (state, action) => {
-    state.sauce = action.payload;
-  },
-  setMain: (state, action) => {
-    state.main = action.payload;
-  },
-  setLoading: (state, action) => {
-    state.loading = action.payload;
-  },
-  setError: (state, action) => {
-    state.error = action.payload;
-  },
-  setSuccess: (state, action) => {
-    state.success = action.payload;
-  },
-};
-
 const ingredients_slice = createSlice({
   name: 'ingredients',
   initialState,
   reducers: {
-    setIngredients: {
-      reducer: (state, action) => {
-        const items = action.payload;
-        privateReducers.setItems(state, { payload: items });
-        privateReducers.setBun(state, {
-          payload: items.filter((i) => i.type === 'bun'),
-        });
-        privateReducers.setSauce(state, {
-          payload: items.filter((i) => i.type === 'sauce'),
-        });
-        privateReducers.setMain(state, {
-          payload: items.filter((i) => i.type === 'main'),
-        });
-        privateReducers.setLoading(state, { payload: false });
-        privateReducers.setError(state, { payload: null });
-        privateReducers.setSuccess(state, { payload: true });
-      },
-
-      prepare: (payload) => ({ payload }),
+    setIngredients: (state, action) => {
+      const items = action.payload;
+      state.items = items;
+      state.bun = items.filter((i) => i.type === 'bun');
+      state.sauce = items.filter((i) => i.type === 'sauce');
+      state.main = items.filter((i) => i.type === 'main');
+      state.loading = false;
+      state.error = null;
+      state.success = true;
     },
-
-    clearIngredientsError: {
-      reducer: (state) => {
-        privateReducers.setError(state, { payload: null });
-      },
-      prepare: () => ({}),
+    clearIngredientsError: (state) => {
+      state.error = null;
     },
-
     resetIngredients: () => initialState,
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchIngredients.pending, (state) => {
-        privateReducers.setLoading(state, { payload: true });
-        privateReducers.setError(state, { payload: null });
-        privateReducers.setSuccess(state, { payload: false });
+        state.loading = true;
+        state.error = null;
+        state.success = false;
       })
       .addCase(fetchIngredients.fulfilled, (state, action) => {
-        ingredients_slice.caseReducers.setIngredients(state, {
-          payload: action.payload,
-        });
+        const items = action.payload;
+        state.items = items;
+        state.bun = items.filter((i) => i.type === 'bun');
+        state.sauce = items.filter((i) => i.type === 'sauce');
+        state.main = items.filter((i) => i.type === 'main');
+        state.loading = false;
+        state.error = null;
+        state.success = true;
       })
       .addCase(fetchIngredients.rejected, (state, action) => {
-        privateReducers.setLoading(state, { payload: false });
-        privateReducers.setError(state, { payload: action.payload });
-        privateReducers.setSuccess(state, { payload: false });
+        state.loading = false;
+        state.error = action.payload;
+        state.success = false;
       });
   },
 });

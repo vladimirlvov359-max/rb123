@@ -1,12 +1,13 @@
 import { useDrag } from 'react-dnd';
+import { createIngredientWithId } from 'src/utils/ingredientHelpers.js';
 
 const DraggableIngredient = ({ ingredient, children }) => {
   const [{ isDragging }, drag] = useDrag({
     type: ingredient.type === 'bun' ? 'bun' : 'ingredient',
     item: () => {
-      return ingredient;
+      const ingredientWithId = createIngredientWithId(ingredient);
+      return ingredientWithId;
     },
-
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
