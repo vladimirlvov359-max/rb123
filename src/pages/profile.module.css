@@ -1,0 +1,32 @@
+/* src/pages/profile.module.css */
+
+.container {
+  display: flex;
+  gap: 4rem;
+  padding: 4rem 2rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  color: white;
+}
+
+
+.navItem {
+  display: block;
+  padding: 0.75rem 0;
+  font-size: 1rem;
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+
+.navItem:hover {
+  color: #cccccc;
+}
+
+.navItem_active {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+

@@ -1,0 +1,50 @@
+/* src/pages/login.module.css */
+
+.container {
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.title {
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  color: white;
+}
+
+.links {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #aaa;
+}
+
+.links a {
+  color: #a259ff;
+  text-decoration: underline;
+  margin-left: 0.25rem;
+  font-weight: 500;
+}
+
+.links a:hover {
+  color: #c684ff;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.error {
+  color: #ff6b6b;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: center;
+}
