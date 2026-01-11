@@ -9,15 +9,15 @@
   color: white;
 }
 
-
 .navItem {
   display: block;
   padding: 0.75rem 0;
-  font-size: 1rem;
   color: #ffffff;
   text-decoration: none;
   transition: color 0.2s;
   cursor: pointer;
+  border: none;
+  background: none;
 }
 
 .navItem:hover {
@@ -29,4 +29,11 @@
   font-weight: 500;
 }
 
+/* Надпись под пунктом "Выход" */
+.hint {
+  margin-top: 80px; /* Отступ от пункта "Выход" */
+  padding-top: 24px;
+  text-align: left; /* По левому краю */
+  color: #6e6c6c;
+}
 

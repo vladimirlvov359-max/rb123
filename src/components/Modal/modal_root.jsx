@@ -23,12 +23,25 @@ export default function ModalRoot() {
   );
   const { isModalOpen: isOrderModalOpen } = useSelector((state) => state.order);
 
+  console.log(
+    'ModalRoot rendered:',
+    JSON.stringify(
+      {
+        isOrderModalOpen,
+        isIngredientModalOpen,
+        pathname: location.pathname,
+        background: location.state?.background,
+      },
+      null,
+      2
+    )
+  );
+
   useEffect(() => {
     if (!isIngredientModalOpen) {
       const storedData = sessionStorage.getItem('ingredientModalData');
       if (storedData) {
         const ingredient = JSON.parse(storedData);
-
         dispatch(openIngredientModal(ingredient));
       }
     }
@@ -39,7 +52,7 @@ export default function ModalRoot() {
     if (location.state?.background) {
       navigate(location.state.background, { replace: true });
     } else {
-      navigate(-1, { replace: true });
+      navigate('/', { replace: true });
     }
     dispatch(closeIngredientModal());
   };
@@ -48,7 +61,14 @@ export default function ModalRoot() {
     dispatch(closeOrderModal());
   };
 
-  if (isIngredientModalOpen && currentIngredient) {
+  const isModalView = location.state?.background;
+
+  if (
+    isModalView &&
+    isIngredientModalOpen &&
+    currentIngredient &&
+    location.pathname.startsWith('/ingredients/')
+  ) {
     return (
       <Modal onClose={handleIngredientClose}>
         <IngredientDetails />
@@ -57,6 +77,7 @@ export default function ModalRoot() {
   }
 
   if (isOrderModalOpen) {
+    console.log('Order modal should render now.');
     return (
       <Modal onClose={handleOrderClose}>
         <OrderDetails />

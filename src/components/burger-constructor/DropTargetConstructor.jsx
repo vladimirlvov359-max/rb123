@@ -1,4 +1,4 @@
-import { useRef } from 'react'; // Добавь useRef
+import { useRef } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch } from 'react-redux';
 

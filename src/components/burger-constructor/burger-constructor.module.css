@@ -5,15 +5,22 @@
 }
 
 .price_button {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
-  gap: 5%;
+  padding: 15px 20px;
+  border-radius: 8px;
+
 }
 
 .largeIcon {
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
 }
 
 .slice {

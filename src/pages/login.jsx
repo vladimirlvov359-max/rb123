@@ -39,12 +39,13 @@ export default function Login() {
       setError(err.message || 'Неверный email или пароль');
     }
   };
-
   return (
     <div className={styles.container}>
       <div>
-        <h2 className={styles.title}>Вход</h2>
-        {error && <div className={styles.error}>{error}</div>}
+        <h2 className={`text text_type_main-large ${styles.title}`}>Вход</h2>
+
+        {error && <div className="text text_type_main-default">{error}</div>}
+
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
             <EmailInput
@@ -69,12 +70,20 @@ export default function Login() {
             </Button>
           </div>
         </form>
+
         <div className={styles.links}>
-          <p>
-            Вы — новый пользователь? <Link to="/register">Зарегистрироваться</Link>
+          <p className="text text_type_main-default">
+            Вы — новый пользователь?{' '}
+            <Link to="/register" className="text text_type_main-default">
+              Зарегистрироваться
+            </Link>
           </p>
-          <p>
-            Забыли пароль? <Link to="/forgot-password">Восстановить пароль</Link>
+
+          <p className="text text_type_main-default">
+            Забыли пароль?{' '}
+            <Link to="/forgot-password" className="text text_type_main-default">
+              Восстановить пароль
+            </Link>
           </p>
         </div>
       </div>

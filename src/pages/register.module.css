@@ -1,50 +1,84 @@
-/* src/pages/login.module.css */
+/* src/pages/register.module.css */
 
 .container {
-  min-height: 100vh;
-  padding: 2rem 1rem;
+  min-height: 70vh;
+
   display: flex;
   justify-content: center;
   align-items: center;
+
 }
+
 
 .title {
   text-align: center;
-  font-size: 1.25rem;
-  font-weight: 500;
-  margin-bottom: 1.5rem;
+  margin: 0;
+  padding: 0;
   color: white;
-}
-
-.links {
-  margin-top: 1.5rem;
-  text-align: center;
-  font-size: 0.875rem;
-  color: #aaa;
-}
-
-.links a {
-  color: #a259ff;
-  text-decoration: underline;
-  margin-left: 0.25rem;
+  font-size: 34px;
   font-weight: 500;
+  padding-bottom: 24px; /* Нижний отступ как у login */
 }
 
-.links a:hover {
-  color: #c684ff;
+.error {
+  color: #ff5555;
+  font-size: 16px;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 24px; /* Отступ между полями */
 }
 
 .buttonContainer {
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
+  margin-top: 24px; /* Отступ от полей до кнопки */
 }
 
-.error {
-  color: #ff6b6b;
-  padding: 12px 16px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  font-size: 14px;
+.loginButton {
+  width: 100%;
+  max-width: 280px;
+  padding: 24px;
+  border-radius: 40px;
+  background: linear-gradient(90deg, #a259ff, #7a4aff);
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 16px rgba(162, 89, 255, 0.4);
+}
+
+.loginButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(162, 89, 255, 0.6);
+}
+
+.loginButton:active {
+  transform: translateY(0);
+}
+
+.links {
+  margin-top: 80px; /* Отступ от кнопки до ссылки */
   text-align: center;
+  font-size: 16px;
+  color: #aaa;
+  line-height: 1.5;
+}
+
+.links a {
+  color: #a259ff;
+  text-decoration: underline;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.links a:hover {
+  color: #c684ff;
 }

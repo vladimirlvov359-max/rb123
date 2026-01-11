@@ -1,10 +1,13 @@
+// src/services/order_slice.js
+
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { request } from '../utils/api';
+import { clearConstructor } from './constructor_slice.js';
 
 export const createOrder = createAsyncThunk(
   'order/create',
-  async (ingredientIds, { rejectWithValue, getState }) => {
+  async (ingredientIds, { rejectWithValue, getState, dispatch }) => {
     try {
       const state = getState();
       const token = state.auth.user?.accessToken;
@@ -17,6 +20,8 @@ export const createOrder = createAsyncThunk(
         },
         body: JSON.stringify({ ingredients: ingredientIds }),
       });
+
+      dispatch(clearConstructor());
 
       return response.order;
     } catch (error) {

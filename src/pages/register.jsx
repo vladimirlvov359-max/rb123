@@ -1,4 +1,3 @@
-// src/pages/register.jsx
 import {
   Button,
   EmailInput,
@@ -35,42 +34,51 @@ export default function Register() {
 
   return (
     <div className={styles.container}>
-      <div>
-        <h2 className={styles.title}>Регистрация</h2>
-        {error && <div className={styles.error}>{error}</div>}
+      <div className={styles.formContainer}>
+        <h2 className={`text text_type_main-large ${styles.title}`}>Регистрация</h2>
+
+        {error && <div className="text text_type_main-default">{error}</div>}
+
         <form onSubmit={handleSubmit}>
-          <div className="mb-6">
+          <div className={styles.inputGroup}>
             <Input
               type="text"
               placeholder="Имя"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              icon="EditIcon"
             />
-          </div>
-          <div className="mb-6">
             <EmailInput
               placeholder="E-mail"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               isIcon={false}
             />
-          </div>
-          <div className="mb-6">
             <PasswordInput
               placeholder="Пароль"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+
           <div className={styles.buttonContainer}>
-            <Button htmlType="submit" size="medium" type="primary">
+            <Button
+              htmlType="submit"
+              size="medium"
+              type="primary"
+              className={styles.loginButton}
+            >
               Зарегистрироваться
             </Button>
           </div>
         </form>
+
         <div className={styles.links}>
-          <p>
-            Уже зарегистрированы? <Link to="/login">Войти</Link>
+          <p className="text text_type_main-default">
+            Уже зарегистрированы?{' '}
+            <Link to="/login" className="text text_type_main-default">
+              Войти
+            </Link>
           </p>
         </div>
       </div>

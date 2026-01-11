@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import styles from './not_found.module.css';
 
-export default function Not_found() {
+export default function NotFound() {
   return (
     <div className={styles.container}>
       <div className={styles.content}>

@@ -1,24 +1,32 @@
+// src/pages/reset_password.jsx
+
 import {
   Button,
   Input,
   PasswordInput,
 } from '@krgaa/react-developer-burger-ui-components';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { request } from '../utils/api';
 
 import styles from './reset_password.module.css';
 
-export default function Reset_password() {
+export default function ResetPassword() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  if (!location.state?.fromForgot) {
+    navigate('/forgot-password', { replace: true });
+    return null;
+  }
+
   const [password, setPassword] = useState('');
   const [token, setToken] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     const savedEmail = localStorage.getItem('resetEmail');
@@ -70,14 +78,20 @@ export default function Reset_password() {
   if (success) {
     return (
       <div className={styles.container}>
-        <div>
-          <h2 className={styles.title}>Пароль успешно изменён!</h2>
-          <p>
+        <div className={styles.formContainer}>
+          <h2 className={`text text_type_main-large ${styles.title}`}>
+            Пароль успешно изменён!
+          </h2>
+          <p className="text text_type_main-default">
             Ваш пароль был успешно обновлён. Теперь вы можете войти в систему с новым
             паролем.
           </p>
-          <Link to="/login">Войти в аккаунт</Link>
-          <p>Автоматический переход через 3 секунды...</p>
+          <Link to="/login" className="text text_type_main-default">
+            Войти в аккаунт
+          </Link>
+          <p className="text text_type_main-default">
+            Автоматический переход через 3 секунды...
+          </p>
         </div>
       </div>
     );
@@ -85,19 +99,21 @@ export default function Reset_password() {
 
   return (
     <div className={styles.container}>
-      <div>
-        <h2 className={styles.title}>Восстановление пароля</h2>
+      <div className={styles.formContainer}>
+        <h2 className={`text text_type_main-large ${styles.title}`}>
+          Восстановление пароля
+        </h2>
 
         {email && (
-          <p>
+          <p className="text text_type_main-default">
             Инструкция отправлена на: <strong>{email}</strong>
           </p>
         )}
 
-        {error && <div className={styles.error}>{error}</div>}
+        {error && <div className="text text_type_main-default">{error}</div>}
 
         <form onSubmit={handleSubmit} className={styles.form}>
-          <div>
+          <div className={styles.inputGroup}>
             <PasswordInput
               onChange={(e) => setPassword(e.target.value)}
               value={password}
@@ -105,9 +121,6 @@ export default function Reset_password() {
               placeholder="Введите новый пароль"
               disabled={isLoading}
             />
-          </div>
-
-          <div>
             <Input
               type="text"
               placeholder="Введите код из письма"
@@ -118,16 +131,22 @@ export default function Reset_password() {
           </div>
 
           <div className={styles.buttonContainer}>
-            <Button type="primary" size="medium" htmlType="submit" disabled={isLoading}>
+            <Button
+              type="primary"
+              size="medium"
+              htmlType="submit"
+              disabled={isLoading}
+              className={styles.loginButton}
+            >
               {isLoading ? 'Сохранение...' : 'Сохранить'}
             </Button>
           </div>
         </form>
 
         <div className={styles.links}>
-          <p className={styles.linkText}>
+          <p className="text text_type_main-default">
             Вспомнили пароль?{' '}
-            <Link to="/login" className={styles.link}>
+            <Link to="/login" className="text text_type_main-default">
               Войти
             </Link>
           </p>

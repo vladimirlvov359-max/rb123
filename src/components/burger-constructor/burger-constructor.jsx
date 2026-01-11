@@ -6,7 +6,9 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { BurgerFilling } from '@components/burger-constructor/burger-filling/burger-filling.jsx';
+import {
+  BurgerFilling
+} from '@components/burger-constructor/burger-filling/burger-filling.jsx';
 import { createOrder } from '@services/order_slice.js';
 
 import DropTargetConstructor from './DropTargetConstructor';
@@ -38,7 +40,7 @@ export const BurgerConstructor = () => {
       return;
     }
     if (!isAuth) {
-      navigate('/login'); // → переадресация на /login
+      navigate('/login');
       return;
     }
 

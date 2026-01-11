@@ -1,4 +1,5 @@
 // src/pages/forgot_password.jsx
+
 import { Button, EmailInput } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -7,7 +8,7 @@ import { request } from '../utils/api';
 
 import styles from './forgot_password.module.css';
 
-export default function Forgot_password() {
+export default function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [requestSent, setRequestSent] = useState(false);
   const [error, setError] = useState('');
@@ -31,12 +32,21 @@ export default function Forgot_password() {
   if (requestSent) {
     return (
       <div className={styles.container}>
-        <div>
-          <h2 className={styles.title}>Проверьте почту</h2>
-          <p className={styles.message}>Мы отправили инструкцию на адрес:</p>
-          <p className={styles.email}>{email}</p>
+        <div className={styles.formContainer}>
+          <h2 className={`text text_type_main-large ${styles.title}`}>
+            Проверьте почту
+          </h2>
 
-          <Link to="/reset-password" className={styles.backLink}>
+          <p className="text text_type_main-default">
+            Мы отправили инструкцию на адрес:
+          </p>
+          <p className="text text_type_main-default">{email}</p>
+
+          <Link
+            to="/reset-password"
+            state={{ fromForgot: true }}
+            className={`text text_type_main-default ${styles.backLink}`}
+          >
             ← Перейти к вводу кода
           </Link>
         </div>
@@ -46,12 +56,15 @@ export default function Forgot_password() {
 
   return (
     <div className={styles.container}>
-      <div>
-        <h2 className={styles.title}>Восстановление пароля</h2>
-        {error && <div className={styles.error}>{error}</div>}
+      <div className={styles.formContainer}>
+        <h2 className={`text text_type_main-large ${styles.title}`}>
+          Восстановление пароля
+        </h2>
+
+        {error && <div className="text text_type_main-default">{error}</div>}
 
         <form onSubmit={handleSubmit}>
-          <div className="mb-6">
+          <div className={styles.inputGroup}>
             <EmailInput
               name="email"
               placeholder="E-mail"
@@ -60,16 +73,25 @@ export default function Forgot_password() {
               isIcon={false}
             />
           </div>
+
           <div className={styles.buttonContainer}>
-            <Button htmlType="submit" size="medium" type="primary">
+            <Button
+              htmlType="submit"
+              size="medium"
+              type="primary"
+              className={styles.loginButton}
+            >
               Восстановить
             </Button>
           </div>
         </form>
 
         <div className={styles.links}>
-          <p>
-            Вспомнили пароль? <Link to="/login">Войти</Link>
+          <p className="text text_type_main-default">
+            Вспомнили пароль?{' '}
+            <Link to="/login" className="text text_type_main-default">
+              Войти
+            </Link>
           </p>
         </div>
       </div>

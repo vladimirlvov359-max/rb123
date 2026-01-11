@@ -1,4 +1,5 @@
 // src/pages/profile.jsx
+
 import {
   Button,
   EmailInput,
@@ -7,7 +8,7 @@ import {
 } from '@krgaa/react-developer-burger-ui-components';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 
 import { getUserData, logoutUser, updateUserData } from '@services/auth_slice.js';
 
@@ -32,22 +33,32 @@ export default function Profile() {
     password: '',
   });
 
+  const [hasChanges, setHasChanges] = useState(false);
+
   useEffect(() => {
     dispatch(getUserData());
   }, [dispatch]);
 
   useEffect(() => {
     if (user) {
-      setForm({ name: user.name, email: user.email, password: '' });
-      setInitialValues({ name: user.name, email: user.email, password: '' });
+      const newFormValues = { name: user.name, email: user.email, password: '' };
+      setForm(newFormValues);
+      setInitialValues(newFormValues);
+      setHasChanges(false);
     }
   }, [user]);
-
-  const isActive = (path) => location.pathname === path;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+
+    const newForm = { ...form, [name]: value };
+    const isChanged =
+      newForm.name !== initialValues.name ||
+      newForm.email !== initialValues.email ||
+      newForm.password !== initialValues.password;
+
+    setHasChanges(isChanged);
   };
 
   const handleSubmit = async (e) => {
@@ -66,6 +77,7 @@ export default function Profile() {
 
       setInitialValues({ name: form.name, email: form.email, password: '' });
       setForm((prev) => ({ ...prev, password: '' }));
+      setHasChanges(false);
     } catch (err) {
       console.error('Ошибка обновления:', err);
     }
@@ -73,6 +85,7 @@ export default function Profile() {
 
   const handleCancel = () => {
     setForm({ ...initialValues, password: '' });
+    setHasChanges(false);
   };
 
   const handleLogout = async () => {
@@ -85,30 +98,52 @@ export default function Profile() {
   };
 
   if (isLoading && !user) {
-    return <div className={styles.container}>Загрузка профиля...</div>;
+    return (
+      <div className={styles.container}>
+        <div className="text text_type_main-default">Загрузка профиля...</div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className={styles.container}>Ошибка: {error}</div>;
+    return (
+      <div className={styles.container}>
+        <div className="text text_type_main-default">Ошибка: {error}</div>
+      </div>
+    );
   }
 
   return (
     <div className={styles.container}>
       <nav>
-        <div
-          className={`${styles.navItem} ${isActive('/profile') ? styles.navItem_active : ''}`}
-          onClick={() => navigate('/profile')}
+        <NavLink
+          to="/profile"
+          className={({ isActive }) =>
+            `${styles.navItem} ${isActive ? styles.navItem_active : ''}`
+          }
         >
-          Профиль
-        </div>
-        <div
-          className={`${styles.navItem} ${isActive('/profile/orders') || location.pathname.startsWith('/profile/orders/') ? styles.navItem_active : ''}`}
-          onClick={() => navigate('/profile/orders')}
+          <span className="text text_type_main-default">Профиль</span>
+        </NavLink>
+
+        <NavLink
+          to="/profile/orders"
+          className={({ isActive }) =>
+            `${styles.navItem} ${isActive ? styles.navItem_active : ''}`
+          }
         >
-          История заказов
-        </div>
-        <div className={`${styles.navItem}  `} onClick={handleLogout}>
-          Выход
+          <span className="text text_type_main-default">История заказов</span>
+        </NavLink>
+
+        <button type="button" className={styles.navItem} onClick={handleLogout}>
+          <span className="text text_type_main-default">Выход</span>
+        </button>
+
+        <div className={styles.hint}>
+          <p className="text text_type_main-default">
+            В этом разделе вы можете
+            <br />
+            изменить свои персональные данные
+          </p>
         </div>
       </nav>
 
@@ -143,28 +178,21 @@ export default function Profile() {
             />
           </div>
 
-          <div>
-            <Button
-              htmlType="submit"
-              size="medium"
-              type="primary"
-              disabled={
-                form.name === initialValues.name &&
-                form.email === initialValues.email &&
-                form.password === initialValues.password
-              }
-            >
-              Сохранить
-            </Button>
-            <Button
-              htmlType="button"
-              size="medium"
-              type="secondary"
-              onClick={handleCancel}
-            >
-              Отмена
-            </Button>
-          </div>
+          {hasChanges && (
+            <div>
+              <Button htmlType="submit" size="medium" type="primary">
+                Сохранить
+              </Button>
+              <Button
+                htmlType="button"
+                size="medium"
+                type="secondary"
+                onClick={handleCancel}
+              >
+                Отмена
+              </Button>
+            </div>
+          )}
         </form>
       </div>
     </div>

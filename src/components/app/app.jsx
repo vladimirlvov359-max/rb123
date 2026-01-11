@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useDispatch, useSelector } from 'react-redux';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 import { AppHeader } from '@components/app-header/app-header';
 import { BurgerConstructor } from '@components/burger-constructor/burger-constructor';
@@ -22,8 +22,10 @@ import { fetchIngredients } from '@services/ingredients_slice.js';
 
 import styles from './app.module.css';
 
-export const App = () => {
+function AppWithRouting() {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const { loading, error } = useSelector((state) => state.ingredients);
 
@@ -57,84 +59,99 @@ export const App = () => {
     );
   }
 
+  const mainRoutes = (
+    <Routes location={location.state?.background || location}>
+      <Route
+        path="/"
+        element={
+          <>
+            <h1 className={`${styles.title} text text_type_main-large mt-10 mb-5 pl-5`}>
+              Соберите бургер
+            </h1>
+            <main className={`${styles.main} pl-5 pr-5`}>
+              <BurgerIngredients />
+              <BurgerConstructor />
+            </main>
+          </>
+        }
+      />
+
+      <Route
+        path="/login"
+        element={
+          <OnlyUnAuth>
+            <Login />
+          </OnlyUnAuth>
+        }
+      />
+      <Route
+        path="/register"
+        element={
+          <OnlyUnAuth>
+            <Register />
+          </OnlyUnAuth>
+        }
+      />
+      <Route
+        path="/forgot-password"
+        element={
+          <OnlyUnAuth>
+            <Forgot_password />
+          </OnlyUnAuth>
+        }
+      />
+      <Route
+        path="/reset-password"
+        element={
+          <OnlyUnAuth>
+            <Reset_password />
+          </OnlyUnAuth>
+        }
+      />
+
+      <Route
+        path="/profile/*"
+        element={
+          <OnlyAuth>
+            <Routes>
+              <Route index element={<Profile />} />
+              <Route path="orders" element={<div>История заказов (в разработке)</div>} />
+            </Routes>
+          </OnlyAuth>
+        }
+      />
+
+      <Route path="/ingredients/:id" element={<Ingredient_page asPage={true} />} />
+
+      <Route path="*" element={<Not_found />} />
+    </Routes>
+  );
+
+  const modalRoutes = (
+    <Routes>
+      {location.state?.background && (
+        <Route path="/ingredients/:id" element={<Ingredient_page asModal={true} />} />
+      )}
+    </Routes>
+  );
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className={styles.app}>
         <AppHeader />
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <h1
-                  className={`${styles.title} text text_type_main-large mt-10 mb-5 pl-5`}
-                >
-                  Соберите бургер
-                </h1>
-                <main className={`${styles.main} pl-5 pr-5`}>
-                  <BurgerIngredients />
-                  <BurgerConstructor />
-                </main>
-              </>
-            }
-          />
+        {mainRoutes}
+        {modalRoutes}
 
-          <Route
-            path="/login"
-            element={
-              <OnlyUnAuth>
-                <Login />
-              </OnlyUnAuth>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <OnlyUnAuth>
-                <Register />
-              </OnlyUnAuth>
-            }
-          />
-          <Route
-            path="/forgot-password"
-            element={
-              <OnlyUnAuth>
-                <Forgot_password />
-              </OnlyUnAuth>
-            }
-          />
-          <Route
-            path="/reset-password"
-            element={
-              <OnlyUnAuth>
-                <Reset_password />
-              </OnlyUnAuth>
-            }
-          />
-
-          <Route
-            path="/profile"
-            element={
-              <OnlyAuth>
-                <Profile />
-              </OnlyAuth>
-            }
-          />
-
-          <Route
-            path="/profile/orders"
-            element={
-              <OnlyAuth>
-                <div>История заказов (в разработке)</div>
-              </OnlyAuth>
-            }
-          />
-
-          <Route path="/ingredients/:id" element={<Ingredient_page />} />
-          <Route path="*" element={<Not_found />} />
-        </Routes>
         <ModalRoot />
       </div>
     </DndProvider>
+  );
+}
+
+export const App = () => {
+  return (
+    <Routes>
+      <Route path="*" element={<AppWithRouting />} />
+    </Routes>
   );
 };
