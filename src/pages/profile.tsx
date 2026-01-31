@@ -1,5 +1,3 @@
-// src/pages/profile.jsx
-
 import {
   Button,
   EmailInput,
@@ -10,24 +8,45 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 
-import { getUserData, logoutUser, updateUserData } from '@services/auth_slice.js';
+import { getUserData, logoutUser, updateUserData } from '@services/auth_slice';
+
+import type { RootState } from '@services/store';
 
 import styles from './profile.module.css';
 
-export default function Profile() {
+type User = {
+  name: string;
+  email: string;
+};
+
+type AuthState = {
+  user: User | null;
+  isLoading: boolean;
+  error: string | null;
+};
+
+type FormValues = {
+  name: string;
+  email: string;
+  password: string;
+};
+
+export default function Profile(): React.ReactElement {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { user, isLoading, error } = useSelector((state) => state.auth);
+  const { user, isLoading, error } = useSelector<RootState, AuthState>(
+    (state) => state.auth
+  );
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<FormValues>({
     name: '',
     email: '',
     password: '',
   });
 
-  const [initialValues, setInitialValues] = useState({
+  const [initialValues, setInitialValues] = useState<FormValues>({
     name: '',
     email: '',
     password: '',
@@ -48,7 +67,7 @@ export default function Profile() {
     }
   }, [user]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
 
@@ -61,10 +80,10 @@ export default function Profile() {
     setHasChanges(isChanged);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const payload = {
+    const payload: Partial<FormValues> = {
       name: form.name,
       email: form.email,
     };
@@ -78,7 +97,7 @@ export default function Profile() {
       setInitialValues({ name: form.name, email: form.email, password: '' });
       setForm((prev) => ({ ...prev, password: '' }));
       setHasChanges(false);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Ошибка обновления:', err);
     }
   };
@@ -92,7 +111,7 @@ export default function Profile() {
     try {
       await dispatch(logoutUser()).unwrap();
       navigate('/login');
-    } catch (err) {
+    } catch (err: any) {
       console.error('Ошибка выхода:', err);
     }
   };

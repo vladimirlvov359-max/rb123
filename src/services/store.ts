@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import authReducer from './auth_slice.js';
-import constructorReducer from './constructor_slice.js';
-import ingredientDetailsReducer from './ingredient_detailsSlice.js';
-import ingredientsReducer from './ingredients_slice.js';
-import orderReducer from './order_slice.js';
+import authReducer from './auth_slice';
+import constructorReducer from './constructor_slice';
+import ingredientDetailsReducer from './ingredient_detailsSlice';
+import ingredientsReducer from './ingredients_slice';
+import orderReducer from './order_slice';
 
 export const store = configureStore({
   reducer: {
@@ -22,3 +22,6 @@ export const store = configureStore({
     }),
   devTools: true,
 });
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

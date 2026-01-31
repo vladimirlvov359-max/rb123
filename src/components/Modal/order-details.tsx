@@ -2,8 +2,16 @@ import { useSelector } from 'react-redux';
 
 import styles from './order-details.module.css';
 
-export default function OrderDetails() {
-  const { orderNumber, loading, error } = useSelector((state) => state.order);
+type OrderState = {
+  orderNumber: number | null;
+  loading: boolean;
+  error: string | null;
+};
+
+export default function OrderDetails(): React.ReactElement {
+  const { orderNumber, loading, error } = useSelector(
+    (state: { order: OrderState }) => state.order
+  );
 
   if (loading) {
     return (

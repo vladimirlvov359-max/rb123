@@ -2,13 +2,25 @@ import { useRef } from 'react';
 import { useDrop } from 'react-dnd';
 import { useDispatch } from 'react-redux';
 
-import { addIngredient, setBun } from '@services/constructor_slice.js';
+import { addIngredient, setBun } from '@services/constructor_slice';
 
-const DropTargetConstructor = ({ children }) => {
+type DropItem = {
+  _id: string;
+  type: string;
+  [key: string]: unknown;
+};
+
+const DropTargetConstructor: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const dispatch = useDispatch();
-  const lastDropRef = useRef(null);
+  const lastDropRef = useRef<{ _id: string; time: number } | null>(null);
 
-  const [{ isOver, canDrop }, drop] = useDrop({
+  const [{ isOver, canDrop }, drop] = useDrop<
+    DropItem,
+    { name: string },
+    { isOver: boolean; canDrop: boolean; itemType: string | null }
+  >({
     accept: ['bun', 'ingredient'],
     drop: (item) => {
       const now = Date.now();

@@ -2,7 +2,8 @@
 
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { request } from '../utils/api';
+import { request } from '@utils/api.js';
+
 import { clearConstructor } from './constructor_slice.js';
 
 export const createOrder = createAsyncThunk(

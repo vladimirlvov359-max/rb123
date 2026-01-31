@@ -1,11 +1,26 @@
-// src/components/ProtectedRoute/ProtectedRoute.jsx
 import { useSelector } from 'react-redux';
 import { Navigate, useLocation } from 'react-router-dom';
 
-export const ProtectedRoute = ({ children, onlyUnAuth = false }) => {
+type AuthState = {
+  isAuth: boolean;
+  isLoading: boolean;
+  isCheckAuthStarted: boolean;
+};
+
+type ProtectedRouteProps = {
+  children: React.ReactNode;
+  onlyUnAuth?: boolean;
+};
+
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  children,
+  onlyUnAuth = false,
+}) => {
   const location = useLocation();
 
-  const { isAuth, isLoading, isCheckAuthStarted } = useSelector((state) => state.auth);
+  const { isAuth, isLoading, isCheckAuthStarted } = useSelector(
+    (state: { auth: AuthState }) => state.auth
+  );
 
   if (onlyUnAuth && isAuth) {
     console.log('[ProtectedRoute] OnlyUnAuth route, but user IS Auth -> Redirect to /');
@@ -38,10 +53,14 @@ export const ProtectedRoute = ({ children, onlyUnAuth = false }) => {
   return children;
 };
 
-export const OnlyAuth = ({ children }) => (
+type WrapperProps = {
+  children: React.ReactNode;
+};
+
+export const OnlyAuth: React.FC<WrapperProps> = ({ children }) => (
   <ProtectedRoute onlyUnAuth={false}>{children}</ProtectedRoute>
 );
 
-export const OnlyUnAuth = ({ children }) => (
+export const OnlyUnAuth: React.FC<WrapperProps> = ({ children }) => (
   <ProtectedRoute onlyUnAuth={true}>{children}</ProtectedRoute>
 );

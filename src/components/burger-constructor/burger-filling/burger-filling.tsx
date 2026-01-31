@@ -6,16 +6,39 @@ import { useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { moveIngredient, removeIngredient } from '@services/constructor_slice.js';
+import { moveIngredient, removeIngredient } from '@services/constructor_slice';
+
+import type { RootState } from '@services/store';
 
 import styles from './burger-filling.module.css';
 
-const DraggableConstructorElement = ({ ingredient, index }) => {
+type Ingredient = {
+  uniqueId: string;
+  name: string;
+  price: number;
+  image: string;
+};
+
+type DraggableItem = {
+  index: number;
+  id: string;
+};
+
+type DropResult = {};
+
+const DraggableConstructorElement: React.FC<{
+  ingredient: Ingredient;
+  index: number;
+}> = ({ ingredient, index }) => {
   const dispatch = useDispatch();
-  const ref = useRef(null);
+  const ref = useRef<HTMLLIElement>(null);
   const [isHovered, setIsHovered] = useState(false);
 
-  const [{ isDragging }, drag] = useDrag({
+  const [{ isDragging }, drag] = useDrag<
+    DraggableItem,
+    DropResult,
+    { isDragging: boolean }
+  >({
     type: 'constructor-ingredient',
     item: () => {
       return { index, id: ingredient.uniqueId };
@@ -30,7 +53,11 @@ const DraggableConstructorElement = ({ ingredient, index }) => {
     },
   });
 
-  const [{ handlerId, isOver }, drop] = useDrop({
+  const [{ handlerId, isOver }, drop] = useDrop<
+    DraggableItem,
+    DropResult,
+    { handlerId: string | symbol | null; isOver: boolean; canDrop: boolean }
+  >({
     accept: 'constructor-ingredient',
     collect: (monitor) => ({
       handlerId: monitor.getHandlerId(),
@@ -49,9 +76,11 @@ const DraggableConstructorElement = ({ ingredient, index }) => {
         return;
       }
 
-      const hoverBoundingRect = ref.current?.getBoundingClientRect();
+      const hoverBoundingRect = ref.current.getBoundingClientRect();
       const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
       const clientOffset = monitor.getClientOffset();
+      if (!clientOffset) return;
+
       const hoverClientY = clientOffset.y - hoverBoundingRect.top;
 
       const isDraggingDown = dragIndex < hoverIndex;
@@ -117,8 +146,9 @@ const DraggableConstructorElement = ({ ingredient, index }) => {
   );
 };
 
-export function BurgerFilling() {
-  const ingredients = useSelector((state) => state.constructor?.ingredients) || [];
+export function BurgerFilling(): React.ReactElement {
+  const ingredients =
+    useSelector((state: RootState) => state.constructor?.ingredients) || [];
 
   return (
     <div className={styles.container}>

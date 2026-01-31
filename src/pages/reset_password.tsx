@@ -1,5 +1,3 @@
-// src/pages/reset_password.jsx
-
 import {
   Button,
   Input,
@@ -8,12 +6,16 @@ import {
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-import { request } from '../utils/api';
+import { request } from '@utils/api.ts';
 
 import styles from './reset_password.module.css';
 
-export default function ResetPassword() {
-  const location = useLocation();
+type LocationState = {
+  fromForgot?: boolean;
+};
+
+export default function ResetPassword(): React.ReactElement | null {
+  const location = useLocation<LocationState>();
   const navigate = useNavigate();
 
   if (!location.state?.fromForgot) {
@@ -35,7 +37,7 @@ export default function ResetPassword() {
     }
   }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
@@ -68,7 +70,7 @@ export default function ResetPassword() {
       setTimeout(() => {
         navigate('/login');
       }, 3000);
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message || 'Неверный код или пароль');
     } finally {
       setIsLoading(false);

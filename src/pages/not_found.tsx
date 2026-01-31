@@ -1,9 +1,8 @@
-// src/pages/Not_found.jsx
 import { Link } from 'react-router-dom';
 
 import styles from './not_found.module.css';
 
-export default function NotFound() {
+export default function NotFound(): React.ReactElement {
   return (
     <div className={styles.container}>
       <div className={styles.content}>

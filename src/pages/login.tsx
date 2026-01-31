@@ -1,5 +1,3 @@
-// src/pages/login.jsx
-
 import {
   Button,
   EmailInput,
@@ -9,20 +7,31 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-import { loginUser } from '@services/auth_slice.js';
+import { loginUser } from '@services/auth_slice';
+
+import type { RootState } from '@services/store';
 
 import styles from './login.module.css';
 
-export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+type LocationState = {
+  from?: string;
+};
+
+type FormData = {
+  email: string;
+  password: string;
+};
+
+export default function Login(): React.ReactElement {
+  const [formData, setFormData] = useState<FormData>({ email: '', password: '' });
   const [error, setError] = useState('');
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
+  const location = useLocation<LocationState>();
 
-  const { isAuth } = useSelector((state) => state.auth);
+  const { isAuth } = useSelector<RootState, { isAuth: boolean }>((state) => state.auth);
+
   useEffect(() => {
     if (isAuth) {
       navigate('/', { replace: true });
@@ -31,16 +40,21 @@ export default function Login() {
 
   const from = location.state?.from || '/';
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     try {
-      await dispatch(loginUser({ email, password })).unwrap();
+      await dispatch(loginUser(formData)).unwrap();
 
       navigate(from, { replace: true });
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message || 'Неверный email или пароль');
     }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
@@ -55,8 +69,8 @@ export default function Login() {
             <EmailInput
               name="email"
               placeholder="E-mail"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={formData.email}
+              onChange={handleChange}
               isIcon={false}
             />
           </div>
@@ -64,8 +78,8 @@ export default function Login() {
             <PasswordInput
               name="password"
               placeholder="Пароль"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={formData.password}
+              onChange={handleChange}
             />
           </div>
           <div className={styles.buttonContainer}>

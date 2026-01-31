@@ -1,7 +1,8 @@
 // src/services/auth_slice.js
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { authApi } from '../utils/api';
+import { authApi } from '@utils/api.js';
+
 import { getToken, removeToken, setToken } from './auth_utils.js';
 
 const initialState = {

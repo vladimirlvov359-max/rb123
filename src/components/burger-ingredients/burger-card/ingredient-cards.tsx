@@ -2,13 +2,38 @@ import { CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { openIngredientModal } from '@services/ingredient_detailsSlice.js';
+import { openIngredientModal } from '@services/ingredient_detailsSlice';
 
-import DraggableIngredient from '../DraggableIngredient';
+import DraggableIngredient from '../DraggableIngredient.tsx';
+
+import type { RootState } from '@services/store';
 
 import style from './ingredient-cards.module.css';
 
-export function IngredientCards(props) {
+type Ingredient = {
+  _id: string;
+  name: string;
+  price: number;
+  image: string;
+  type: 'bun' | 'sauce' | 'main';
+};
+
+type ConstructorState = {
+  bun?: Ingredient | null;
+  ingredients: Ingredient[];
+};
+
+type IngredientCardsProps = {
+  bunItems: Ingredient[];
+  sauceItems: Ingredient[];
+  mainItems: Ingredient[];
+  bunRef: React.RefObject<HTMLDivElement>;
+  sauceRef: React.RefObject<HTMLDivElement>;
+  mainRef: React.RefObject<HTMLDivElement>;
+  scrollContainerRef: React.RefObject<HTMLUListElement>;
+};
+
+export function IngredientCards(props: IngredientCardsProps): React.ReactElement {
   const {
     bunItems,
     sauceItems,
@@ -23,12 +48,14 @@ export function IngredientCards(props) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const constructorState = useSelector((state) => state.constructor);
+  const constructorState = useSelector<RootState, ConstructorState>(
+    (state) => state.constructor
+  );
 
-  const bun = constructorState?.bun || null;
-  const ingredients = constructorState?.ingredients || [];
+  const bun = constructorState.bun || null;
+  const ingredients = constructorState.ingredients || [];
 
-  const getIngredientCount = (ingredient) => {
+  const getIngredientCount = (ingredient: Ingredient): number => {
     if (!ingredient) return 0;
 
     if (ingredient.type === 'bun') {
@@ -40,7 +67,7 @@ export function IngredientCards(props) {
     return ingredients.filter((item) => item?._id === ingredient._id).length;
   };
 
-  const handleIngredientClick = (ingredient) => {
+  const handleIngredientClick = (ingredient: Ingredient) => {
     dispatch(openIngredientModal(ingredient));
 
     sessionStorage.setItem('ingredientModalData', JSON.stringify(ingredient));
@@ -50,6 +77,7 @@ export function IngredientCards(props) {
   const safeBunItems = Array.isArray(bunItems) ? bunItems : [];
   const safeSauceItems = Array.isArray(sauceItems) ? sauceItems : [];
   const safeMainItems = Array.isArray(mainItems) ? mainItems : [];
+
   return (
     <div>
       <ul ref={scrollContainerRef} className={`${style.main} custom-scroll`}>

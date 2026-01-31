@@ -2,9 +2,23 @@ import { useSelector } from 'react-redux';
 
 import styles from './ingredient-details.module.css';
 
-export default function IngredientDetails() {
+type Ingredient = {
+  image: string;
+  name: string;
+  calories: number;
+  proteins: number;
+  fat: number;
+  carbohydrates: number;
+};
+
+type IngredientDetailsState = {
+  currentIngredient: Ingredient | null;
+};
+
+export default function IngredientDetails(): React.ReactElement | null {
   const currentIngredient = useSelector(
-    (state) => state.ingredientDetails?.currentIngredient
+    (state: { ingredientDetails: IngredientDetailsState }) =>
+      state.ingredientDetails?.currentIngredient
   );
 
   if (!currentIngredient) {

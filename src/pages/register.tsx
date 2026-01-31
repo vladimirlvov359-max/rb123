@@ -8,28 +8,41 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { registerUser } from '@services/auth_slice.js';
+import { registerUser } from '@services/auth_slice';
 
 import styles from './register.module.css';
 
-export default function Register() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+type FormData = {
+  name: string;
+  email: string;
+  password: string;
+};
+
+export default function Register(): React.ReactElement {
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    email: '',
+    password: '',
+  });
   const [error, setError] = useState('');
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     try {
-      await dispatch(registerUser({ email, password, name })).unwrap();
+      await dispatch(registerUser(formData)).unwrap();
       navigate('/');
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message || 'Ошибка регистрации');
     }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
@@ -44,20 +57,23 @@ export default function Register() {
             <Input
               type="text"
               placeholder="Имя"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
               icon="EditIcon"
             />
             <EmailInput
               placeholder="E-mail"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
               isIcon={false}
             />
             <PasswordInput
               placeholder="Пароль"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
             />
           </div>
 

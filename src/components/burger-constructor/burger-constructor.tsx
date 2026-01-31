@@ -6,27 +6,60 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { BurgerFilling } from '@components/burger-constructor/burger-filling/burger-filling.jsx';
-import { createOrder } from '@services/order_slice.js';
+import { BurgerFilling } from '@components/burger-constructor/burger-filling/burger-filling';
+import { createOrder } from '@services/order_slice';
+import type { RootState } from '@services/store';
 
-import DropTargetConstructor from './DropTargetConstructor';
+import DropTargetConstructor from './DropTargetConstructor.tsx';
 
 import styles from './burger-constructor.module.css';
 
-export const BurgerConstructor = () => {
+interface Bun {
+  _id: string;
+  name: string;
+  price: number;
+  image: string;
+}
+
+interface Ingredient {
+  _id: string;
+  name: string;
+  price: number;
+  image: string;
+  uniqueId: string;
+}
+
+interface OrderState {
+  loading: boolean;
+  error: string | null;
+}
+
+interface AuthState {
+  isAuth: boolean;
+}
+
+interface ConstructorState {
+  bun?: Bun | null;
+  ingredients: Ingredient[];
+  total: number;
+}
+
+export const BurgerConstructor: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const constructorState = useSelector((state) => state.constructor || {});
-  const orderState = useSelector((state) => state.order || {});
-  const authState = useSelector((state) => state.auth || {});
+  const constructorState = useSelector<RootState, ConstructorState>(
+    (state) => state.constructor || {}
+  );
+  const orderState = useSelector<RootState, OrderState>((state) => state.order || {});
+  const authState = useSelector<RootState, AuthState>((state) => state.auth || {});
 
-  const bun = constructorState?.bun || null;
-  const ingredients = constructorState?.ingredients || [];
-  const total = constructorState?.total || 0;
+  const bun = constructorState.bun || null;
+  const ingredients = constructorState.ingredients || [];
+  const total = constructorState.total || 0;
 
   const { loading: orderLoading, error: orderError } = orderState;
   const { isAuth } = authState;
-  const canPlaceOrder = bun && ingredients.length > 0;
+  const canPlaceOrder = !!bun && ingredients.length > 0;
 
   const handleCreateOrder = () => {
     if (!bun) {

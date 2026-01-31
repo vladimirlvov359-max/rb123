@@ -1,33 +1,44 @@
-// src/App.jsx
+// src/App.tsx
 import { useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useDispatch, useSelector } from 'react-redux';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 
-import { AppHeader } from '@components/app-header/app-header';
-import { BurgerConstructor } from '@components/burger-constructor/burger-constructor';
-import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredients';
-import ModalRoot from '@components/Modal/modal_root';
-import { OnlyAuth, OnlyUnAuth } from '@components/ProtectedRoute/ProtectedRoute';
-import Forgot_password from '@pages/forgot_password.jsx';
-import Ingredient_page from '@pages/ingredient_page.jsx';
-import Login from '@pages/login.jsx';
-import Not_found from '@pages/not_found.jsx';
-import Profile from '@pages/profile.jsx';
-import Register from '@pages/register.jsx';
-import Reset_password from '@pages/reset_password.jsx';
-import { checkAuth } from '@services/auth_slice.js';
-import { fetchIngredients } from '@services/ingredients_slice.js';
+import { AppHeader } from '@components/app-header/app-header.tsx';
+import { BurgerConstructor } from '@components/burger-constructor/burger-constructor.tsx';
+import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredients.tsx';
+import ModalRoot from '@components/Modal/modal_root.tsx';
+import { OnlyAuth, OnlyUnAuth } from '@components/ProtectedRoute/ProtectedRoute.tsx';
+import Forgot_password from '@pages/forgot_password.tsx';
+import Ingredient_page from '@pages/ingredient_page.tsx';
+import Login from '@pages/login.tsx';
+import Not_found from '@pages/not_found.tsx';
+import Profile from '@pages/profile.tsx';
+import Register from '@pages/register.tsx';
+import Reset_password from '@pages/reset_password.tsx';
+import { checkAuth } from '@services/auth_slice';
+import { fetchIngredients } from '@services/ingredients_slice';
+import type { AppDispatch, RootState } from '@services/store';
 
 import styles from './app.module.css';
 
-function AppWithRouting() {
-  const dispatch = useDispatch();
-  const location = useLocation();
-  const navigate = useNavigate();
+interface LocationState {
+  background?: Location;
+}
 
-  const { loading, error } = useSelector((state) => state.ingredients);
+interface IngredientState {
+  loading: boolean;
+  error: string | null;
+}
+
+const AppWithRouting: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const location = useLocation<LocationState>();
+
+  const { loading, error } = useSelector<RootState, IngredientState>(
+    (state) => state.ingredients
+  );
 
   useEffect(() => {
     dispatch(checkAuth());
@@ -141,14 +152,13 @@ function AppWithRouting() {
         <AppHeader />
         {mainRoutes}
         {modalRoutes}
-
         <ModalRoot />
       </div>
     </DndProvider>
   );
-}
+};
 
-export const App = () => {
+export const App: React.FC = () => {
   return (
     <Routes>
       <Route path="*" element={<AppWithRouting />} />

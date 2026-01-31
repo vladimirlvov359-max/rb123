@@ -2,11 +2,28 @@ import { Preloader, Tab } from '@krgaa/react-developer-burger-ui-components';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import { IngredientCards } from '@components/burger-ingredients/burger-card/ingredient-cards.jsx';
+import { IngredientCards } from '@components/burger-ingredients/burger-card/ingredient-cards';
 
 import styles from './burger-ingredients.module.css';
 
-export const BurgerIngredients = () => {
+interface Ingredient {
+  _id: string;
+  name: string;
+  price: number;
+  image: string;
+  type: 'bun' | 'sauce' | 'main';
+}
+
+interface IngredientsState {
+  items: Ingredient[];
+  bun: Ingredient[];
+  sauce: Ingredient[];
+  main: Ingredient[];
+  loading: boolean;
+  error: string | null;
+}
+
+export const BurgerIngredients: React.FC = () => {
   const {
     items: allIngredients,
     bun,
@@ -14,14 +31,14 @@ export const BurgerIngredients = () => {
     main,
     loading,
     error,
-  } = useSelector((state) => state.ingredients);
+  } = useSelector((state: { ingredients: IngredientsState }) => state.ingredients);
 
-  const bunRef = useRef(null);
-  const sauceRef = useRef(null);
-  const mainRef = useRef(null);
-  const scrollContainerRef = useRef(null);
+  const bunRef = useRef<HTMLDivElement>(null);
+  const sauceRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLUListElement>(null);
 
-  const [activeTab, setActiveTab] = useState('bun');
+  const [activeTab, setActiveTab] = useState<'bun' | 'sauce' | 'main'>('bun');
 
   useEffect(() => {
     const container = scrollContainerRef.current;
@@ -32,12 +49,12 @@ export const BurgerIngredients = () => {
       const containerTop = containerRect.top;
 
       const sections = [
-        { id: 'bun', ref: bunRef, element: null },
-        { id: 'sauce', ref: sauceRef, element: null },
-        { id: 'main', ref: mainRef, element: null },
+        { id: 'bun' as const, ref: bunRef },
+        { id: 'sauce' as const, ref: sauceRef },
+        { id: 'main' as const, ref: mainRef },
       ];
 
-      let closestSection = null;
+      let closestSection: 'bun' | 'sauce' | 'main' | null = null;
       let minDistance = Infinity;
 
       sections.forEach((section) => {
@@ -71,7 +88,10 @@ export const BurgerIngredients = () => {
     };
   }, [activeTab]);
 
-  const scrollToSection = (sectionRef, tabValue) => {
+  const scrollToSection = (
+    sectionRef: React.RefObject<HTMLDivElement>,
+    tabValue: 'bun' | 'sauce' | 'main'
+  ) => {
     setActiveTab(tabValue);
     if (sectionRef.current && scrollContainerRef.current) {
       const sectionTop = sectionRef.current.offsetTop;

@@ -1,19 +1,21 @@
-// src/pages/forgot_password.jsx
-
 import { Button, EmailInput } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { request } from '../utils/api';
+import { request } from '@utils/api.ts';
 
 import styles from './forgot_password.module.css';
 
-export default function ForgotPassword() {
+type RequestState = {
+  fromForgot?: boolean;
+};
+
+export default function ForgotPassword(): React.ReactElement {
   const [email, setEmail] = useState('');
   const [requestSent, setRequestSent] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -24,7 +26,7 @@ export default function ForgotPassword() {
       });
 
       setRequestSent(true);
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message || 'Ошибка сервера');
     }
   };
