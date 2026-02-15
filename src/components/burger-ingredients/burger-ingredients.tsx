@@ -6,22 +6,22 @@ import { IngredientCards } from '@components/burger-ingredients/burger-card/ingr
 
 import styles from './burger-ingredients.module.css';
 
-interface Ingredient {
+type Ingredient = {
   _id: string;
   name: string;
   price: number;
   image: string;
   type: 'bun' | 'sauce' | 'main';
-}
+};
 
-interface IngredientsState {
+type IngredientsState = {
   items: Ingredient[];
   bun: Ingredient[];
   sauce: Ingredient[];
   main: Ingredient[];
   loading: boolean;
   error: string | null;
-}
+};
 
 export const BurgerIngredients: React.FC = () => {
   const {

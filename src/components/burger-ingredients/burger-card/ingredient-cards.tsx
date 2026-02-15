@@ -2,7 +2,7 @@ import { CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { openIngredientModal } from '@services/ingredient_detailsSlice';
+import { openIngredientModal } from '@services/ingredient_detailsSlice.ts';
 
 import DraggableIngredient from '../DraggableIngredient.tsx';
 

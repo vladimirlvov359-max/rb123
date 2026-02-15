@@ -1,6 +1,6 @@
-export interface IngredientWithUniqueId extends Ingredient {
+export type IngredientWithUniqueId = {
   uniqueId: string;
-}
+} & Ingredient;
 
 export const createIngredientWithId = (
   ingredient: Omit<Ingredient, 'uniqueId'>

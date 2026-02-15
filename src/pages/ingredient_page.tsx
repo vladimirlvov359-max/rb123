@@ -4,30 +4,31 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router-dom';
 
 import IngredientDetails from '@components/Modal/ingredient-details.tsx';
-import { setCurrentIngredient } from '@services/ingredient_detailsSlice.js';
+import { setCurrentIngredient } from '@services/ingredient_detailsSlice.ts';
+
 import type { RootState } from '@services/store';
 
 import styles from './ingredient_page.module.css';
 
-interface LocationState {
+type LocationState = {
   background?: Location;
-}
+};
 
-interface Ingredient {
+type Ingredient = {
   _id: string;
   [key: string]: unknown;
-}
+};
 
-interface IngredientsState {
+type IngredientsState = {
   items: Ingredient[];
   loading: boolean;
   error: string | null;
-}
+};
 
-interface IngredientPageProps {
+type IngredientPageProps = {
   asPage?: boolean;
   asModal?: boolean;
-}
+};
 
 export default function IngredientPage({
   asPage = false,

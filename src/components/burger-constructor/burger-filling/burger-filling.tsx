@@ -6,7 +6,7 @@ import { useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { moveIngredient, removeIngredient } from '@services/constructor_slice';
+import { moveIngredient, removeIngredient } from '@services/constructor_slice.ts';
 
 import type { RootState } from '@services/store';
 

@@ -1,7 +1,7 @@
 .center {
-  text-align: center;
   padding: 2rem;
   color: white;
+  text-align: center;
 }
 
 .error {
@@ -9,35 +9,35 @@
 }
 
 .container {
-  padding: 2rem 1rem;
   max-width: 600px;
   margin: 0 auto;
+  padding: 2rem 1rem;
 }
 
 .card {
-  background: #1e1e1e;
-  border-radius: 12px;
   padding: 1.5rem;
   text-align: center;
+  background: #1e1e1e;
+  border-radius: 12px;
 }
 
 .image {
+  display: block;
   width: 120px;
   height: 120px;
-  object-fit: contain;
   margin: 0 auto 1.5rem;
-  display: block;
+  object-fit: contain;
 }
 
 .title {
-  font-size: 1.5rem;
-  color: white;
   margin-bottom: 1rem;
+  color: white;
+  font-size: 1.5rem;
 }
 
 .calories {
-  color: #aaa;
   margin-bottom: 1.25rem;
+  color: #aaa;
 }
 
 .nutrients {

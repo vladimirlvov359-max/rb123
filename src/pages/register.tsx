@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { registerUser } from '@services/auth_slice';
+import { registerUser } from '@services/auth_slice.ts';
 
 import styles from './register.module.css';
 

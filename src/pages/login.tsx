@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-import { loginUser } from '@services/auth_slice';
+import { loginUser } from '@services/auth_slice.ts';
 
 import type { RootState } from '@services/store';
 

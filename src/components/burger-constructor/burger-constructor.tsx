@@ -7,42 +7,43 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { BurgerFilling } from '@components/burger-constructor/burger-filling/burger-filling';
-import { createOrder } from '@services/order_slice';
-import type { RootState } from '@services/store';
+import { createOrder } from '@services/order_slice.ts';
 
 import DropTargetConstructor from './DropTargetConstructor.tsx';
 
+import type { RootState } from '@services/store';
+
 import styles from './burger-constructor.module.css';
 
-interface Bun {
+type Bun = {
   _id: string;
   name: string;
   price: number;
   image: string;
-}
+};
 
-interface Ingredient {
+type Ingredient = {
   _id: string;
   name: string;
   price: number;
   image: string;
   uniqueId: string;
-}
+};
 
-interface OrderState {
+type OrderState = {
   loading: boolean;
   error: string | null;
-}
+};
 
-interface AuthState {
+type AuthState = {
   isAuth: boolean;
-}
+};
 
-interface ConstructorState {
+type ConstructorState = {
   bun?: Bun | null;
   ingredients: Ingredient[];
   total: number;
-}
+};
 
 export const BurgerConstructor: React.FC = () => {
   const dispatch = useDispatch();
