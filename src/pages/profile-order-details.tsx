@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router-dom';
 
 import { getToken } from '@services/auth_utils.ts';
+import { useAppDispatch, useAppSelector } from '@services/hooks';
 import { wsConnecting } from '@services/profile_orders_slice';
 
 import { request } from '../utils/api';
@@ -24,8 +24,8 @@ type Props = {
 export default function ProfileOrderDetails({ asPage = false, asModal = false }: Props) {
   const location = useLocation<LocationState>();
   const { number } = useParams<{ number: string }>();
-  const dispatch = useDispatch();
-  const { orders } = useSelector((state: RootState) => state.profileOrders);
+  const dispatch = useAppDispatch();
+  const { orders } = useAppSelector((state: RootState) => state.profileOrders);
 
   const [loading, setLoading] = useState(true);
   const [order, setOrder] = useState<any | null>(null);

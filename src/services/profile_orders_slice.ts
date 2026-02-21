@@ -39,7 +39,6 @@ const profileOrdersSlice = createSlice({
     wsMessage: (state, action: PayloadAction<OrdersWsResponse>) => {
       const { orders, total, totalToday } = action.payload;
 
-      // Валидация: пропускаем некорректные заказы
       const validOrders = orders.filter((order) => {
         return (
           order._id &&
