@@ -19,7 +19,7 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
-  base: '',
+  base: '/rb123/',
   test: {
     globals: true,
     environment: 'jsdom',
