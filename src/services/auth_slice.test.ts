@@ -36,7 +36,7 @@ describe('Auth Slice', () => {
     refreshToken: 'refresh_456',
   };
 
-  const initialState: AuthState = {
+  export const initialState: AuthState = {
     user: null,
     isLoading: false,
     error: null,

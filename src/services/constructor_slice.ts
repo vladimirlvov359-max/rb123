@@ -18,7 +18,7 @@ type ConstructorState = {
   _lastAdd: number | null;
 };
 
-const initialState: ConstructorState = {
+export const initialState: ConstructorState = {
   bun: null,
   ingredients: [],
   total: 0,

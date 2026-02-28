@@ -3,16 +3,38 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getCookie, getToken, removeToken, setToken } from './auth_utils';
 
+// ✅ КОНСТАНТЫ: тестовые данные (меняем в одном месте)
+export const TEST_ACCESS_TOKEN = 'access_123';
+export const TEST_REFRESH_TOKEN = 'refresh_456';
+export const TEST_USER_EMAIL = 'test@example.com';
+
+// ✅ КОНСТАНТЫ: ключи хранилища (если меняются — правим здесь)
+export const STORAGE_KEYS = {
+  ACCESS_TOKEN: 'accessToken',
+  REFRESH_TOKEN: 'refreshToken',
+} as const;
+
+// ✅ HELPER: установка токенов (убираем дублирование setToken)
+export const setupTokens = (
+  access: string = TEST_ACCESS_TOKEN,
+  refresh: string = TEST_REFRESH_TOKEN
+) => {
+  setToken(access, refresh);
+};
+
+// ✅ HELPER: очистка хранилища (выносим повторяющуюся логику)
+export const clearStorage = () => {
+  localStorage.clear();
+  document.cookie.split(';').forEach((c) => {
+    document.cookie = c
+      .replace(/^ +/, '')
+      .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
+  });
+};
+
 describe('Auth Utils', () => {
-  // Очистка хранилища перед каждым тестом
   beforeEach(() => {
-    localStorage.clear();
-    // Очищаем все cookies
-    document.cookie.split(';').forEach((c) => {
-      document.cookie = c
-        .replace(/^ +/, '')
-        .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
-    });
+    clearStorage(); // ✅ используем helper вместо дублей
   });
 
   afterEach(() => {
@@ -21,32 +43,28 @@ describe('Auth Utils', () => {
 
   describe('setToken', () => {
     it('should store accessToken in localStorage', () => {
-      setToken('access_123', 'refresh_456');
-      expect(localStorage.getItem('accessToken')).toBe('access_123');
+      setupTokens(); // ✅ одна строка вместо setToken('...', '...')
+      expect(localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN)).toBe(TEST_ACCESS_TOKEN);
     });
 
     it('should store refreshToken in document.cookie', () => {
-      setToken('access_123', 'refresh_456');
-      expect(document.cookie).toContain('refreshToken=refresh_456');
+      setupTokens();
+      expect(document.cookie).toContain(
+        `${STORAGE_KEYS.REFRESH_TOKEN}=${TEST_REFRESH_TOKEN}`
+      );
     });
 
     it('should not store anything if accessToken is empty', () => {
-      setToken('', 'refresh_456');
-      expect(localStorage.getItem('accessToken')).toBeNull();
-      // Проверяем, что cookie не установился (или был удален, если был)
-      expect(getCookie('refreshToken')).toBeUndefined();
+      setToken('', TEST_REFRESH_TOKEN); // ✅ используем константу для refresh
+      expect(localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN)).toBeNull();
+      expect(getCookie(STORAGE_KEYS.REFRESH_TOKEN)).toBeUndefined();
     });
 
-    // ✅ ИСПРАВЛЕНО: jsdom не возвращает атрибуты в document.cookie
     it('should set cookie successfully (attributes are internal to browser/jsdom)', () => {
-      setToken('access_123', 'refresh_456');
+      setupTokens();
       const cookies = document.cookie;
-
-      // Проверяем только имя и значение, так как атрибуты скрыты
-      expect(cookies).toContain('refreshToken=refresh_456');
-
-      // Атрибуты можно проверить только косвенно (например, что cookie вообще есть)
-      expect(getCookie('refreshToken')).toBe('refresh_456');
+      expect(cookies).toContain(`${STORAGE_KEYS.REFRESH_TOKEN}=${TEST_REFRESH_TOKEN}`);
+      expect(getCookie(STORAGE_KEYS.REFRESH_TOKEN)).toBe(TEST_REFRESH_TOKEN);
     });
   });
 
@@ -58,61 +76,57 @@ describe('Auth Utils', () => {
     });
 
     it('should return accessToken from localStorage', () => {
-      localStorage.setItem('accessToken', 'access_123');
+      localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, TEST_ACCESS_TOKEN); // ✅ константы
       const tokens = getToken();
-      expect(tokens.accessToken).toBe('access_123');
+      expect(tokens.accessToken).toBe(TEST_ACCESS_TOKEN);
     });
 
     it('should return refreshToken from cookie', () => {
-      // Устанавливаем cookie явно через документ
-      document.cookie = 'refreshToken=refresh_456; path=/';
+      document.cookie = `${STORAGE_KEYS.REFRESH_TOKEN}=${TEST_REFRESH_TOKEN}; path=/`;
       const tokens = getToken();
-      expect(tokens.refreshToken).toBe('refresh_456');
+      expect(tokens.refreshToken).toBe(TEST_REFRESH_TOKEN);
     });
 
     it('should return both tokens when both are set', () => {
-      localStorage.setItem('accessToken', 'access_123');
-      document.cookie = 'refreshToken=refresh_456; path=/';
-
+      // ✅ используем helper для установки
+      setupTokens();
       const tokens = getToken();
       expect(tokens).toEqual({
-        accessToken: 'access_123',
-        refreshToken: 'refresh_456',
+        accessToken: TEST_ACCESS_TOKEN,
+        refreshToken: TEST_REFRESH_TOKEN,
       });
     });
 
-    // ✅ ИСПРАВЛЕНО: устанавливаем cookies по отдельности для надежности в jsdom
     it('should handle cookie with multiple values', () => {
       document.cookie = 'other=value; path=/';
-      document.cookie = 'refreshToken=refresh_456; path=/';
+      document.cookie = `${STORAGE_KEYS.REFRESH_TOKEN}=${TEST_REFRESH_TOKEN}; path=/`;
       document.cookie = 'another=test; path=/';
 
       const tokens = getToken();
-      expect(tokens.refreshToken).toBe('refresh_456');
+      expect(tokens.refreshToken).toBe(TEST_REFRESH_TOKEN);
     });
   });
 
   describe('removeToken', () => {
     beforeEach(() => {
-      localStorage.setItem('accessToken', 'access_123');
-      document.cookie = 'refreshToken=refresh_456; path=/';
+      // ✅ setupTokens вместо ручного setToken
+      setupTokens();
     });
 
     it('should remove accessToken from localStorage', () => {
       removeToken();
-      expect(localStorage.getItem('accessToken')).toBeNull();
+      expect(localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN)).toBeNull();
     });
 
     it('should remove refreshToken from cookies', () => {
       removeToken();
-      // Cookie удаляется установкой expires в прошлое
-      expect(getCookie('refreshToken')).toBeUndefined();
+      expect(getCookie(STORAGE_KEYS.REFRESH_TOKEN)).toBeUndefined();
     });
 
     it('should remove both tokens', () => {
       removeToken();
-      expect(localStorage.getItem('accessToken')).toBeNull();
-      expect(getCookie('refreshToken')).toBeUndefined();
+      expect(localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN)).toBeNull();
+      expect(getCookie(STORAGE_KEYS.REFRESH_TOKEN)).toBeUndefined();
     });
   });
 
@@ -152,7 +166,7 @@ describe('Auth Utils', () => {
       const access = 'new_access_token';
       const refresh = 'new_refresh_token';
 
-      setToken(access, refresh);
+      setupTokens(access, refresh); // ✅ helper с кастомными значениями
       const retrieved = getToken();
 
       expect(retrieved.accessToken).toBe(access);
@@ -160,7 +174,7 @@ describe('Auth Utils', () => {
     });
 
     it('should return null/undefined after removeToken', () => {
-      setToken('access_123', 'refresh_456');
+      setupTokens(); // ✅ вместо setToken('access_123', 'refresh_456')
       removeToken();
 
       const tokens = getToken();

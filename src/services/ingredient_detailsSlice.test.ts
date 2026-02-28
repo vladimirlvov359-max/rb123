@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import ingredientDetailsReducer, {
   closeIngredientModal,
+  initialState,
   openIngredientModal,
   resetIngredientDetails,
   setCurrentIngredient,
@@ -23,11 +24,6 @@ describe('Ingredient Details Slice', () => {
     image: 'https://example.com/bun.png',
     image_mobile: 'https://example.com/bun-mobile.png',
     image_large: 'https://example.com/bun-large.png',
-  };
-
-  const initialState: IngredientDetailsState = {
-    currentIngredient: null,
-    isModalOpen: false,
   };
 
   describe('Initial state', () => {

@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import constructorReducer, {
   addIngredient,
   clearConstructor,
+  initialState,
   moveIngredient,
   removeIngredient,
   setBun,
@@ -31,14 +32,6 @@ describe('Constructor Slice', () => {
     name: 'Соус',
     price: 50,
     type: 'sauce',
-  };
-
-  const initialState: ConstructorState = {
-    bun: null,
-    ingredients: [],
-    total: 0,
-    count: 0,
-    _lastAdd: null,
   };
 
   beforeEach(() => {
