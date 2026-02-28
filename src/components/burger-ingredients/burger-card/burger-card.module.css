@@ -1,0 +1,37 @@
+.main {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  max-height: 40%;
+  margin-right: 7%;
+  padding-left: 0;
+  overflow-y: auto;
+}
+
+.verticalBlock {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 10px;
+}
+
+.name {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.price_cristal {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
