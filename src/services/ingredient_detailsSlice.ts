@@ -33,7 +33,7 @@ const ingredientDetailsSlice = createSlice({
       state.isModalOpen = false;
     },
 
-    resetIngredientDetails: () => initialState,
+    resetIngredientDetails: () => ({ ...initialState }),
   },
 });
 

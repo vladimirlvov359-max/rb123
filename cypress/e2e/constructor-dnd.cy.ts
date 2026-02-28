@@ -1,16 +1,22 @@
 // cypress/e2e/constructor-dnd.cy.ts
-describe('Constructor Page', () => {
-  it('should load page successfully', () => {
-    // 1. Заходим на страницу (baseUrl уже содержит /rb123)
-    cy.visit('/', { timeout: 10000 });
+describe('Constructor Drag and Drop', () => {
+  beforeEach(() => {
+    cy.intercept('GET', '**/ingredients', { fixture: 'ingredients.json' }).as(
+      'getIngredients'
+    );
+    cy.visit('/');
+    cy.wait('@getIngredients');
+  });
 
-    // 2. Проверяем, что body загрузился
-    cy.get('body').should('exist');
+  it('should drag ingredient to constructor', () => {
+    // Перетаскиваем ингредиент
+    cy.get('[data-testid="ingredient-card"][data-type="main"]')
+      .first()
+      .trigger('dragstart');
+    cy.get('[data-testid="constructor-ingredients"]').trigger('drop');
 
-    // 3. Проверяем, что нет ошибки 404
-    cy.contains('404').should('not.exist');
-
-    // 4. Проверяем root-элемент React-приложения
-    cy.get('#root').should('exist');
+    // Проверяем результат
+    cy.get('[data-testid="constructor-ingredients"]').should('not.be.empty');
+    cy.get('[data-testid="order-button"]').should('be.visible');
   });
 });

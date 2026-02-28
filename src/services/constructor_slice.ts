@@ -142,7 +142,7 @@ const constructorSlice = createSlice({
       };
     },
 
-    clearConstructor: () => initialState,
+    clearConstructor: () => ({ ...initialState }),
   },
 });
 

@@ -7,6 +7,7 @@ import authReducer, {
   checkAuth,
   clearError,
   getUserData,
+  initialState,
   loginUser,
   logoutUser,
   refreshUserToken,
@@ -34,14 +35,6 @@ describe('Auth Slice', () => {
   const mockTokens = {
     accessToken: 'access_123',
     refreshToken: 'refresh_456',
-  };
-
-  export const initialState: AuthState = {
-    user: null,
-    isLoading: false,
-    error: null,
-    isAuth: false,
-    isCheckAuthStarted: false,
   };
 
   beforeEach(() => {
